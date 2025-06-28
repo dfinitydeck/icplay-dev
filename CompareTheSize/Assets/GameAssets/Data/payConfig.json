@@ -1,0 +1,19 @@
+{
+  "payConfigs": [
+    {
+      "id": 1,
+      "money": 1,
+      "count": 50
+    },
+    {
+      "id": 2,
+      "money": 10,
+      "count": 600
+    },
+    {
+      "id": 3,
+      "money": 20,
+      "count": 1300
+    }
+  ]
+}

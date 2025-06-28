@@ -1,0 +1,17 @@
+{
+  "type": "module",
+  "dependencies": {
+    "@dfinity/identity": "^2.4.1",
+    "@dfinity/ledger-icp": "^2.6.13",
+    "@dfinity/ledger-icrc": "^2.8.1",
+    "@dfinity/utils": "^2.13.0",
+    "cors": "^2.8.5",
+    "crc": "^4.3.2",
+    "crypt": "^0.0.2",
+    "crypto": "^1.0.1",
+    "express": "^5.1.0",
+    "js-sha256": "^0.11.1",
+    "node-fetch": "^3.3.2",
+    "redis": "^5.1.0"
+  }
+}

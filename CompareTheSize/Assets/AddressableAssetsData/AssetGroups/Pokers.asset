@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Pokers
+  m_EditorClassIdentifier: 
+  m_GroupName: Pokers
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 9c575c6e4b05b4f49bdce4176c6a2fc0
+  m_SerializeEntries:
+  - m_GUID: 6a2507cfe69ae8044bf85d38a45e98c1
+    m_Address: Assets/GameAssets/Pokers
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: b8937d0966d09744daf75b8357f9441e, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: c539de5fbc3802f40a981f0b280296fb, type: 2}
+    - {fileID: 11400000, guid: 62fd575e5598e864f81888d1177d7898, type: 2}

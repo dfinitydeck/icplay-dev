@@ -1,0 +1,11 @@
+{
+  "canisters": {
+    "canisafe_id": {
+      "frontend": {
+        "entrypoint": "dist/index.html"
+      },
+      "source": ["dist/"],
+      "type": "assets"
+    }
+  }
+}
