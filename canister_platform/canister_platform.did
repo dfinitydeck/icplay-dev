@@ -1,0 +1,120 @@
+type Attribute = record { key : text; value : text };
+type CanisterArgs = variant {
+  Upgrade : PlatformUpgradeArgs;
+  Init : PlatformInitArgs;
+};
+type GameCategory = variant {
+  Casual；
+  Competitive;
+  Educational;
+  Sports;
+  Adventure;
+  Simulation;
+  Others;
+};
+type RewardCategory = variant {
+  Leaderboard;      // Based on ranked performance in competitions
+  Participation;    // For simply playing or joining events
+  Referral;         // For inviting new users
+  Achievement;      // For completing specific in-game milestones or tasks
+  RandomDrop;       // Rewards distributed randomly or via loot-box style
+  DailyLogin;       // Rewards for daily activity or check-ins
+  PurchaseBonus;    // Extra rewards when making purchases
+  CommunityEvent;   // Rewards from platform-wide or special events
+};
+type GameData = record {
+  id : nat64;
+  total_likes : nat64;
+  created : nat64;
+  sorted : bool;
+  owner : principal;
+  tracks : vec TrackInfo;
+  name : text;
+  total_plays : nat64;
+  game_type : GameType;
+  updated : nat64;
+  category : opt GameCategory;
+  image : opt text;
+};
+type GameType = variant {
+  Card;           // Card-based gameplay
+  Trivia;         // Question and answer games
+  Platformer;     // Side-scrolling jump-and-run
+  Strategy;       // Tactical decision-making games
+  Shooter;        // Shooting-based mechanics
+  Idle;           // Minimal interaction, passive rewards
+  Puzzle;         // Problem-solving gameplay
+  Simulation;     // Life/business/physics sims
+  Action;         // Fast-paced reaction-based games
+  RPG;            // Role-playing games
+  Arcade;         // Quick-play classic-style games
+  Other;
+};
+type DataBoxInfo = record {
+  game_box_id : principal;
+  game_id : nat64;
+  save_canister_id : principal;
+  file_id : nat32;
+};
+type PlatformInitArgs = record {
+  ecdsa_key_name : text;
+  owner : principal;
+  name : text;
+  token_expiration : nat64;
+  init_game : bool;
+};
+type PlatformUpgradeArgs = record {
+  owner : opt principal;
+  token_expiration : opt nat64;
+};
+type Result = variant { Ok : blob; Err : text };
+type Result_1 = variant { Ok; Err : text };
+type Result_2 = variant { Ok : GameData; Err : text };
+type Result_3 = variant { Ok : State; Err : text };
+type State = record {
+  ecdsa_token_public_key : text;
+  ecdsa_key_name : text;
+  owner : principal;
+  name : text;
+  token_expiration : nat64;
+  game_count : nat;
+};
+type Token = record {
+  subject : principal;
+  target : principal;
+  policies : text;
+};
+type GameAssetInfo = record {
+  duration : opt nat64;
+  external_url : text;
+  animation_url : text;
+  name : text;
+  asset_pack_name : opt text;
+  description : text;
+  created_at : nat64;
+  oss_file_info : opt OssFileInfo;
+  file_url : text;
+  likes : nat64; batch_add_units_to_game
+  creator_name : text;
+  attributes : vec Attribute;
+  release_at : opt nat64;
+  game_type : opt GameType;
+  image : text;
+  plays : nat64;
+  position : nat64;
+};
+type WalletReceiveResult = record { accepted : nat64 };
+service : (opt CanisterArgs) -> {
+  __get_candid_interface_tmp_hack : () -> (text) query;
+  access_token : (principal) -> (Result);
+  add_unit_to_game : (nat64, GameUnit) -> (Result_1);
+   batch_add_units_to_game: (nat64, vec GameUnit) -> (Result_1);
+  delete_unit_from_game : (nat64, nat64) -> (Result_1);
+  delete_unit_from_game_by_share : (nat64, principal, nat64) -> (Result_1);
+  get_game_info : (nat64) -> (Result_2) query;
+  get_game_list : () -> (vec GameMetadata) query;
+  get_platform_info : () -> (Result_3) query;
+  sign_access_token : (Token) -> (Result);
+  wallet_balance : () -> (nat) query;
+  wallet_receive : () -> (WalletReceiveResult);
+}
