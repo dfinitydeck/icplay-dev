@@ -1,0 +1,14 @@
+{
+  "canister_indexer": {
+    "ic": "5jxvr-fyaaa-aaaaf-qaslq-cai"
+  },
+  "canister_user": {
+    "ic": "5au6n-tqaaa-aaaaf-qaska-cai"
+  },
+  "canister_platform": {
+    "ic": "5hvyz-6iaaa-aaaaf-qaskq-cai"
+  },
+  "frontend_service": {
+    "ic": "4dyxl-hiaaa-aaaaf-qasmq-cai"
+  }
+}

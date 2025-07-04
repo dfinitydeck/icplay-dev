@@ -1,0 +1,39 @@
+{
+  "canisters": {
+    "game_box_frontend": {
+      "frontend": {
+        "entrypoint": "./game_box_frontend/dist/index.html"
+      },
+      "source": [
+        "./game_box_frontend/dist"
+      ],
+      "type": "assets"
+    },
+    "canister_user": {
+      "candid": "canister_user/canister_user.did",
+      "package": "canister_user",
+      "optimize": "cycles",
+      "type": "rust"
+    },
+    "canister_indexer": {
+      "candid": "canister_indexer/canistore_indexer.did",
+      "package": "canistore_indexer",
+      "optimize": "cycles",
+      "type": "rust"
+    },
+    "canister_platform": {
+      "candid": "canister_platform/canistore_platform.did",
+      "package": "canistore_platform",
+      "optimize": "cycles",
+      "type": "rust"
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "output_env_file": ".env",
+  "version": 1
+}
