@@ -26,7 +26,7 @@ type MessageSource = record {
   resource_id : nat64;
 };
 type MessageType = variant { Replace; Delete; Create; Update };
-type Result = variant { Ok : nat64; Err : text };
+type Result_0 = variant { Ok : nat64; Err : text };
 type Result_1 = variant { Ok : text; Err : text };
 type WalletReceiveResult = record { accepted : nat64 };
 service : (opt CanisterArgs) -> {
@@ -43,7 +43,7 @@ service : (opt CanisterArgs) -> {
       vec record { Message; principal },
     ) query;
   get_message_size : () -> (vec record { text; nat64 }, nat64) query;
-  receive_batch_messages : (vec Message) -> (Result);
+  receive_batch_messages : (vec Message) -> (Result_0);
   receive_message : (Message) -> (Result_1);
   wallet_balance : () -> (nat) query;
   wallet_receive : () -> (WalletReceiveResult);
