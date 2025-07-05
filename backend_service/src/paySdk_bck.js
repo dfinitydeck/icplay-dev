@@ -57,7 +57,7 @@ const ensureKeyExists = () => {
 };
 
 const merchantIdentity = ensureKeyExists();
-const myPrincipal = "h552j-dfr7j-vmwh4-iubzj-sf4dw-xvoi2-qhmpj-rtk6s-3t4qp-sdvae-hae";
+const myPrincipal = "xxx";
 
 const agent = await createAgent({
 //  identity: merchantIdentity,
@@ -65,7 +65,7 @@ const agent = await createAgent({
 });
 const ledger = LedgerCanister.create({
   agent,
-  canisterId: "ryjl3-tyaaa-aaaaa-aaaba-cai"
+  canisterId: "xxx"
 });
 
 const app = express();

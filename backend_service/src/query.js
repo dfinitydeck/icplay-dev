@@ -32,5 +32,5 @@ async function getBalance(principalText) {
 }
 
 // Usage example (replace with actual Principal)
-getBalance("");
+// getBalance("");
 
