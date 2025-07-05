@@ -15,7 +15,7 @@ use serde_bytes::ByteBuf;
 
 use crate::data_store;
 
-async fn core_create_user_space() -> Result<Principal, String> {
+async fn core_create_user_space() -> Result_0<Principal, String> {
     let user_pid = ic_cdk::caller();
     if data_store::user::get_user(user_pid).is_none() {
         return Err(CustomError::new(ErrorCode::NoDataFound, Some("User not registered")).to_string());
@@ -42,7 +42,7 @@ async fn core_create_user_space() -> Result<Principal, String> {
             ..GameBoxInitArgs::default()
         }),
     };
-    let result: CallResult<(Result<(Principal, Principal), String>,)> = ic_cdk::api::call::call(
+    let result: CallResult<(Result_0<(Principal, Principal), String>,)> = ic_cdk::api::call::call(
         dao_id,
         "create_profile_and_game_box",
         (init_args,),
@@ -69,7 +69,7 @@ async fn core_create_user_space() -> Result<Principal, String> {
 }
 
 #[update(guard = "anonymous_guard")]
-fn user_login() -> Result<UserInfo, String> {
+fn user_login() -> Result_0<UserInfo, String> {
     let user_pid = caller();
     match data_store::user::get_user(user_pid) {
         Some(user) => Ok(user.into_inner().to_user_info(user_pid)),
@@ -82,7 +82,7 @@ fn user_login() -> Result<UserInfo, String> {
 }
 
 #[update(guard = "owner_guard")]
-fn admin_login(user_pid: Principal) -> Result<UserInfo, String> {
+fn admin_login(user_pid: Principal) -> Result_0<UserInfo, String> {
     match data_store::user::get_user(user_pid) {
         Some(user) => Ok(user.into_inner().to_user_info(user_pid)),
         None => {
@@ -94,7 +94,7 @@ fn admin_login(user_pid: Principal) -> Result<UserInfo, String> {
 }
 
 #[ic_cdk::update(guard = "anonymous_guard")]
-fn update_avatar(new_avatar: String) -> Result<bool, String> {
+fn update_avatar(new_avatar: String) -> Result_0<bool, String> {
     let user_pid = ic_cdk::caller();
     let user_result = data_store::user::get_user(user_pid);
     match user_result {
@@ -110,7 +110,7 @@ fn update_avatar(new_avatar: String) -> Result<bool, String> {
 }
 
 #[ic_cdk::update(guard = "anonymous_guard")]
-fn update_email(email: String) -> Result<bool, String> {
+fn update_email(email: String) -> Result_0<bool, String> {
     let user_pid = ic_cdk::caller();
     let user_result = data_store::user::get_user(user_pid);
     match user_result {
@@ -129,7 +129,7 @@ fn update_email(email: String) -> Result<bool, String> {
 fn update_public_key(
     trusted_ecdsa_pub_key: Option<ByteBuf>,
     trusted_eddsa_pub_key: Option<ByteN<32>>,
-) -> Result<bool, String> {
+) -> Result_0<bool, String> {
     let user_pid = ic_cdk::caller();
     let user_result = data_store::user::get_user(user_pid);
     match user_result {
@@ -146,7 +146,7 @@ fn update_public_key(
 }
 
 #[ic_cdk::update(guard = "anonymous_guard")]
-fn add_user_attr(new_attr: Attribute) -> Result<bool, String> {
+fn add_user_attr(new_attr: Attribute) -> Result_0<bool, String> {
     let user_pid = ic_cdk::caller();
     let user_wrapper = data_store::user::get_user(user_pid);
     match user_wrapper {
@@ -163,7 +163,7 @@ fn add_user_attr(new_attr: Attribute) -> Result<bool, String> {
 }
 
 #[ic_cdk::update(guard = "anonymous_guard")]
-fn update_user_info(update_info: UpdateUserInfo) -> Result<bool, String> {
+fn update_user_info(update_info: UpdateUserInfo) -> Result_0<bool, String> {
     let user_pid = ic_cdk::caller();
     let user_result = data_store::user::get_user(user_pid);
     match user_result {
@@ -208,7 +208,7 @@ fn update_user_info(update_info: UpdateUserInfo) -> Result<bool, String> {
 }
 
 #[update(guard = "anonymous_guard")]
-async fn create_user_space_by_invite(invite_code: String) -> Result<Principal, String> {
+async fn create_user_space_by_invite(invite_code: String) -> Result_0<Principal, String> {
     if !data_store::state::check_invite_code(&invite_code) {
         return Err(CustomError::new(ErrorCode::NoDataFound, Some("Invalid or missing invite code")).to_string());
     }
@@ -217,7 +217,7 @@ async fn create_user_space_by_invite(invite_code: String) -> Result<Principal, S
 }
 
 #[update(guard = "anonymous_guard")]
-async fn create_user_space_by_pay(order_id: u64) -> Result<Principal, String> {
+async fn create_user_space_by_pay(order_id: u64) -> Result_0<Principal, String> {
     let user_pid = ic_cdk::caller();
     if !data_store::payment::check_payment_order(user_pid, order_id) {
         return Err(CustomError::new(ErrorCode::DataInvalid, Some("Invalid Payment Order Info")).to_string());
@@ -226,7 +226,7 @@ async fn create_user_space_by_pay(order_id: u64) -> Result<Principal, String> {
 }
 
 #[update(guard = "owner_guard")]
-async fn update_dao_id(dao_id: Principal) -> Result<Principal, String> {
+async fn update_dao_id(dao_id: Principal) -> Result_0<Principal, String> {
     data_store::state::with_mut(|r| {
         r.dao_canister_id = dao_id;
     });
@@ -234,7 +234,7 @@ async fn update_dao_id(dao_id: Principal) -> Result<Principal, String> {
 }
 
 #[ic_cdk::update(guard = "owner_guard")]
-fn add_user_space(user_pid: Principal, space_info: UserProfileInfo) -> Result<bool, String> {
+fn add_user_space(user_pid: Principal, space_info: UserProfileInfo) -> Result_0<bool, String> {
     let user_wrapper = data_store::user::get_user(user_pid);
     match user_wrapper {
         Some(_) => {
@@ -248,7 +248,7 @@ fn add_user_space(user_pid: Principal, space_info: UserProfileInfo) -> Result<bo
 }
 
 #[ic_cdk::update(guard = "anonymous_guard")]
-fn create_pay_order(source: String) -> Result<Option<PaymentInfo>, String> {
+fn create_pay_order(source: String) -> Result_0<Option<PaymentInfo>, String> {
     let payer = caller();
     let mut payment_info: Option<PaymentInfo> = None;
     data_store::state::load();
@@ -272,19 +272,19 @@ fn create_pay_order(source: String) -> Result<Option<PaymentInfo>, String> {
 }
 
 #[ic_cdk::update(guard = "anonymous_guard")]
-async fn confirm_pay_order(pay_id: u64) -> Result<bool, String> {
+async fn confirm_pay_order(pay_id: u64) -> Result_0<bool, String> {
     let result = data_store::payment::confirm_payment_order(pay_id).await;
     result
 }
 
 #[ic_cdk::update(guard = "anonymous_guard")]
-async fn refund_pay_order(pay_id: u64, to: Vec<u8>) -> Result<bool, String> {
+async fn refund_pay_order(pay_id: u64, to: Vec<u8>) -> Result_0<bool, String> {
     let from = caller();
     let result = data_store::payment::refund_payment_order(pay_id, from, to).await;
     result
 }
 
 #[ic_cdk::update(guard = "owner_guard")]
-async fn add_invite(invite_code: String) -> Result<String, String> {
+async fn add_invite(invite_code: String) -> Result_0<String, String> {
     data_store::state::add_invite_code(invite_code)
 }

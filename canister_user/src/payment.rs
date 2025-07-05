@@ -27,7 +27,7 @@ pub async fn get_token_balance(token: &str, account: Account) -> u64 {
         "ICP" => {
             let ledger_canister_id =
                 Principal::from_text(env.get_canister_pid(CanisterType::Ledger)).unwrap();
-            let amount: Result<(Nat,), _> =
+            let amount: Result_0<(Nat,), _> =
                 call(ledger_canister_id, "icrc1_balance_of", (account,)).await;
             match amount {
                 Ok((value,)) => nat_to_u64(value),
@@ -37,7 +37,7 @@ pub async fn get_token_balance(token: &str, account: Account) -> u64 {
         "CKBTC" => {
             let ckbtc_ledger_canister_id =
                 Principal::from_text(env.get_canister_pid(CanisterType::CkBTCLedger)).unwrap();
-            let amount: Result<(Nat,), _> =
+            let amount: Result_0<(Nat,), _> =
                 call(ckbtc_ledger_canister_id, "icrc1_balance_of", (account,)).await;
             match amount {
                 Ok((value,)) => nat_to_u64(value),
@@ -54,7 +54,7 @@ pub async fn execute_icrc1_transfer(
     from: Option<[u8; 32]>,
     to: Account,
     amount: u64,
-) -> Result<u64, String> {
+) -> Result_0<u64, String> {
     let fee = get_token_fee(token);
     let args = ICRC1TransferArg {
         to,
@@ -69,7 +69,7 @@ pub async fn execute_icrc1_transfer(
         "ICP" => {
             let ledger_canister_id =
                 Principal::from_text(env.get_canister_pid(CanisterType::Ledger)).unwrap();
-            let result: Result<(Nat,), (RejectionCode, String)> =
+            let result: Result_0<(Nat,), (RejectionCode, String)> =
                 call(ledger_canister_id, "icrc1_transfer", (args,)).await;
 
             match result {
@@ -83,7 +83,7 @@ pub async fn execute_icrc1_transfer(
         "CKBTC" => {
             let ckbtc_ledger_canister_id =
                 Principal::from_text(env.get_canister_pid(CanisterType::CkBTCLedger)).unwrap();
-            let result: Result<(Nat,), (RejectionCode, String)> =
+            let result: Result_0<(Nat,), (RejectionCode, String)> =
                 call(ckbtc_ledger_canister_id, "icrc1_transfer", (args,)).await;
 
             match result {
@@ -103,7 +103,7 @@ pub async fn execute_icp_transfer(
     from_subaccount: Option<Subaccount>,
     to: AccountIdentifier,
     amount: u64,
-) -> Result<u64, String> {
+) -> Result_0<u64, String> {
     let env = state::get_env();
     let ledger_canister_id =
         Principal::from_text(env.get_canister_pid(CanisterType::Ledger)).unwrap();
@@ -138,7 +138,7 @@ pub async fn execute_token_transfer(
     from: Option<[u8; 32]>,
     to: Vec<u8>,
     amount: u64,
-) -> Result<u64, String> {
+) -> Result_0<u64, String> {
     match token {
         "ICP" => {
             let to_account = AccountIdentifier::from_slice(&to)

@@ -160,7 +160,7 @@ pub mod state {
         });
     }
 
-    pub fn add_invite_code(invite_code: String) -> Result<String, String> {
+    pub fn add_invite_code(invite_code: String) -> Result_0<String, String> {
         state::with_mut(|r| {
             if r.invite_codes.contains(&invite_code) {
                 return Ok(invite_code.clone());
@@ -187,7 +187,7 @@ pub mod state {
         })
     }
 
-    pub fn delete_invite_code(invite_code: String) -> Result<String, String> {
+    pub fn delete_invite_code(invite_code: String) -> Result_0<String, String> {
         state::with_mut(|r| {
             if let Some(pos) = r.invite_codes.iter().position(|s| *s == invite_code) {
                 r.invite_codes.remove(pos);
@@ -247,7 +247,7 @@ pub mod user {
         USER_STORE.with(|r| r.borrow_mut().insert(pid, UserContainer(user)));
     }
 
-    pub fn update_user(pid: Principal, update_fn: impl FnOnce(&mut User)) -> Result<(), String> {
+    pub fn update_user(pid: Principal, update_fn: impl FnOnce(&mut User)) -> Result_0<(), String> {
         USER_STORE.with(|store| {
             let mut users = store.borrow_mut();
 
@@ -263,7 +263,7 @@ pub mod user {
         })
     }
 
-    pub fn add_profile_to_user(pid: Principal, profile_info: UserProfileInfo) -> Result<(), String> {
+    pub fn add_profile_to_user(pid: Principal, profile_info: UserProfileInfo) -> Result_0<(), String> {
         update_user(pid, |user| {
             user.profiles.push(profile_info);
         })
@@ -396,7 +396,7 @@ pub mod payment {
         (total, has_more, data)
     }
 
-    pub async fn confirm_payment_order(order_id: u64) -> Result<bool, String> {
+    pub async fn confirm_payment_order(order_id: u64) -> Result_0<bool, String> {
         let order = get_payment_order(order_id);
 
         let mut check_order = match order {
@@ -428,7 +428,7 @@ pub mod payment {
         order_id: u64,
         caller: Principal,
         to: Vec<u8>,
-    ) -> Result<bool, String> {
+    ) -> Result_0<bool, String> {
         // Fetch the payment order
         let order = get_payment_order(order_id);
         let mut check_order = match order {

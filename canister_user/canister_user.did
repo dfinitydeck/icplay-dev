@@ -88,7 +88,7 @@ type QueryOrderResp = record {
 
 type QuerySort = variant { TimeAsc; TimeDesc };
 
-type Result = variant { Ok : text; Err : text };
+type Result_0 = variant { Ok : text; Err : text };
 type Result_1 = variant { Ok : bool; Err : text };
 type Result_2 = variant { Ok : UserInfo; Err : text };
 type Result_3 = variant { Ok : opt PaymentInfo; Err : text };
@@ -187,7 +187,7 @@ type WalletReceiveResult = record {
 
 service : (opt CanisterArgs) -> {
   __get_candid_interface_tmp_hack : () -> (text) query;
-  add_invite_code : (text) -> (Result);
+  add_invite_code : (text) -> (Result_0);
   add_user_attribute : (Attribute) -> (Result_1);
   add_user_space_info : (principal, UserSpaceInfo) -> (Result_1);
   admin_login : (principal) -> (Result_2);
