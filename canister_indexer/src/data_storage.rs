@@ -366,7 +366,7 @@ pub mod message {
     }
 
     // Delete a message by its message ID and message type
-    pub fn delete_message(message_type: &str, message_id: &str) -> Result<(), String> {
+    pub fn delete_message(message_type: &str, message_id: &str) -> Result_0<(), String> {
         let message_delete_result = MSG_STORE.with(|store| {
             let mut store_ref = store.borrow_mut();
 
@@ -413,7 +413,7 @@ pub mod message {
     }
 
     // Process the incoming message based on its payload type and message type
-    pub async fn process_message(msg: Message, caller: Principal) -> Result<String, String> {
+    pub async fn process_message(msg: Message, caller: Principal) -> Result_0<String, String> {
         let msg_id = msg.msg_id.clone();
     
         // Match on the payload type and decode accordingly
@@ -459,7 +459,7 @@ pub mod message {
         msg_id: &String,
         msg: &Message,
         caller: Principal,
-    ) -> Result<(), String> {
+    ) -> Result_0<(), String> {
         match msg_type {
             MessageType::Create => {
                 create_message(msg_name, msg.clone(), caller);  // Clone msg when needed

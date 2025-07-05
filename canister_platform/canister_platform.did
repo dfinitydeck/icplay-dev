@@ -67,7 +67,7 @@ type PlatformUpgradeArgs = record {
   owner : opt principal;
   token_expiration : opt nat64;
 };
-type Result = variant { Ok : blob; Err : text };
+type Result_0 = variant { Ok : blob; Err : text };
 type Result_1 = variant { Ok; Err : text };
 type Result_2 = variant { Ok : GameData; Err : text };
 type Result_3 = variant { Ok : State; Err : text };
@@ -106,7 +106,7 @@ type GameAssetInfo = record {
 type WalletReceiveResult = record { accepted : nat64 };
 service : (opt CanisterArgs) -> {
   __get_candid_interface_tmp_hack : () -> (text) query;
-  access_token : (principal) -> (Result);
+  access_token : (principal) -> (Result_0);
   add_unit_to_game : (nat64, GameUnit) -> (Result_1);
    batch_add_units_to_game: (nat64, vec GameUnit) -> (Result_1);
   delete_unit_from_game : (nat64, nat64) -> (Result_1);
@@ -114,7 +114,7 @@ service : (opt CanisterArgs) -> {
   get_game_info : (nat64) -> (Result_2) query;
   get_game_list : () -> (vec GameMetadata) query;
   get_platform_info : () -> (Result_3) query;
-  sign_access_token : (Token) -> (Result);
+  sign_access_token : (Token) -> (Result_0);
   wallet_balance : () -> (nat) query;
   wallet_receive : () -> (WalletReceiveResult);
 }
