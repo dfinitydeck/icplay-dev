@@ -1,3 +1,4 @@
+// ECDSA and platform data store for canister
 use crate::ecdsa;
 use candid::{CandidType, Decode, Encode, Principal};
 use canister_types::{cose::PLATFORM_TOKEN_AAD, platform::GameMetadata};
@@ -12,7 +13,7 @@ use std::{borrow::Cow, cell::RefCell};
 
 type Memory = VirtualMemory<DefaultMemoryImpl>;
 
-#[derive(CandidType, Clone, Deserialize, Serialize, Debug)]
+#[derive(CandidType, Clone, Deserialize, Serialize, Debug, Default)]
 pub struct State {
     pub name: String,
     pub owner: Principal,
@@ -23,21 +24,8 @@ pub struct State {
     pub token_expiration: u64, // in seconds
 }
 
-impl Default for State {
-    fn default() -> Self {
-        Self {
-            name: String::from("canister Platform"),
-            owner: Principal::anonymous(),
-            ecdsa_key_name: String::from("canister_test_key"),
-            ecdsa_token_public_key: String::from(""),
-            token_expiration: 0,
-            space_count: 0,
-            next_channel_id: 0,
-        }
-    }
-}
-
 impl State {
+    /// Checks if the caller is the owner
     pub fn owner_permission(&self, caller: Principal) -> Result<(), String> {
         if caller == self.owner {
             Ok(())
@@ -46,6 +34,7 @@ impl State {
         }
     }
 
+    /// Checks if the caller is the owner or a controller
     pub fn controller_or_owner_permission(&self, caller: Principal) -> Result<(), String> {
         if caller == self.owner || ic_cdk::api::is_controller(&caller) {
             Ok(())
@@ -75,12 +64,12 @@ pub struct GameWrapper(pub GameMetadata);
 impl Storable for GameWrapper {
     const BOUND: Bound = Bound::Unbounded;
 
-    fn from_bytes(bytes: std::borrow::Cow<[u8]>) -> Self {
+    fn from_bytes(bytes: Cow<[u8]>) -> Self {
         Decode!(bytes.as_ref(), Self).unwrap()
     }
 
-    fn to_bytes(&self) -> std::borrow::Cow<[u8]> {
-        std::borrow::Cow::Owned(Encode!(self).unwrap())
+    fn to_bytes(&self) -> Cow<[u8]> {
+        Cow::Owned(Encode!(self).unwrap())
     }
 }
 
@@ -95,17 +84,14 @@ const GAME_MEMORY_ID: MemoryId = MemoryId::new(1);
 
 thread_local! {
     static STATE: RefCell<State> = RefCell::new(State::default());
-
     static MEMORY_MANAGER: RefCell<MemoryManager<DefaultMemoryImpl>> =
         RefCell::new(MemoryManager::init(DefaultMemoryImpl::default()));
-
     static STATE_STORE: RefCell<StableCell<State, Memory>> = RefCell::new(
         StableCell::init(
             MEMORY_MANAGER.with_borrow(|m| m.get(STATE_MEMORY_ID)),
             State::default()
         ).expect("failed to init STATE_STORE")
     );
-
     static GAME_STORE: RefCell<StableBTreeMap<u64, GameWrapper, Memory>> = RefCell::new(
         StableBTreeMap::init(
             MEMORY_MANAGER.with_borrow(|m| m.get(GAME_MEMORY_ID)),
@@ -116,14 +102,17 @@ thread_local! {
 pub mod state {
     use super::*;
 
+    /// Read-only access to State
     pub fn with<R>(f: impl FnOnce(&State) -> R) -> R {
         STATE.with(|r| f(&r.borrow()))
     }
 
+    /// Mutable access to State
     pub fn with_mut<R>(f: impl FnOnce(&mut State) -> R) -> R {
         STATE.with(|r| f(&mut r.borrow_mut()))
     }
 
+    /// Load State from stable storage
     pub fn load() {
         STATE_STORE.with(|r| {
             let s = r.borrow().get().clone();
@@ -133,6 +122,7 @@ pub mod state {
         });
     }
 
+    /// Save State to stable storage
     pub fn save() {
         STATE.with(|h| {
             STATE_STORE.with(|r| {
@@ -143,6 +133,7 @@ pub mod state {
         });
     }
 
+    /// Initialize ECDSA public key if not set
     pub async fn init_ecdsa_public_key() -> Result<(), String> {
         let ecdsa_key_name = with(|r| {
             if r.ecdsa_token_public_key.is_empty() && !r.ecdsa_key_name.is_empty() {
@@ -161,7 +152,6 @@ pub mod state {
                 r.ecdsa_token_public_key = hex::encode(pk.public_key);
             });
         }
-
         Ok(())
     }
 }
@@ -170,24 +160,27 @@ pub mod game {
     use canister_types::platform::GameUnit;
     use super::*;
 
+    /// Get a game by id
     pub fn get_game(game_id: u64) -> Option<GameWrapper> {
         GAME_STORE.with(|r| r.borrow().get(&game_id))
     }
 
+    /// Add a new game
     pub fn add_game(id: u64, game: GameMetadata) {
         GAME_STORE.with(|r| r.borrow_mut().insert(id, GameWrapper(game)));
     }
 
+    /// Get all games as a list
     pub fn get_game_list() -> Vec<GameMetadata> {
         GAME_STORE.with(|r| {
-            let store = r.borrow();
-            store
+            r.borrow()
                 .iter()
-                .map(|(_, wrapper)| wrapper.into_inner().clone())
+                .map(|(_, wrapper)| wrapper.0.clone())
                 .collect()
         })
     }
 
+    /// Add a unit to a game
     pub fn add_unit_to_game(game_id: u64, unit: GameUnit) -> Result<(), String> {
         GAME_STORE.with(|r| {
             let mut store = r.borrow_mut();
@@ -202,6 +195,7 @@ pub mod game {
         })
     }
 
+    /// Delete a unit from a game by position
     pub fn delete_unit_from_game(game_id: u64, position: u64) -> Result<(), String> {
         GAME_STORE.with(|r| {
             let mut store = r.borrow_mut();
@@ -216,6 +210,7 @@ pub mod game {
         })
     }
 
+    /// Delete a unit from a game by share (external canister)
     pub fn delete_unit_from_game_by_share(
         game_id: u64,
         save_canister_id: Principal,
